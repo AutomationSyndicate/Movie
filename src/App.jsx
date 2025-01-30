@@ -59,7 +59,6 @@ function App() {
             height="400"
             src={trailerUrl} // Use the trailer URL with autoplay=1
             title="Movie Trailer"
-            frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
@@ -69,23 +68,33 @@ function App() {
       <div className="movie-container">
         <div className="movie-section">
           <h2>Popular on Netflix</h2>
-          <div className="movie-grid">
-            {movies.map((movie) => (
-              <div key={movie.id} className="movie-card">
-                <img
-                  src={`${IMAGE_URL}${movie.poster_path}`}
-                  alt={movie.title}
-                  className="movie-poster"
-                />
-                <div className="movie-info">
-                  <h3>{movie.title}</h3>
-                  <div className="movie-details">
-                    <span>{new Date(movie.release_date).getFullYear()}</span>
-                    <span>⭐ {movie.vote_average.toFixed(1)}</span>
+          <div className="slider-container">
+            <button className="slider-button left" onClick={() => {
+              const container = document.querySelector('.movie-grid');
+              container.scrollLeft -= container.offsetWidth;
+            }}>‹</button>
+            <div className="movie-grid">
+              {movies.map((movie) => (
+                <div key={movie.id} className="movie-card">
+                  <img
+                    src={`${IMAGE_URL}${movie.poster_path}`}
+                    alt={movie.title}
+                    className="movie-poster"
+                  />
+                  <div className="movie-info">
+                    <h3>{movie.title}</h3>
+                    <div className="movie-details">
+                      <span>{new Date(movie.release_date).getFullYear()}</span>
+                      <span>⭐ {movie.vote_average.toFixed(1)}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <button className="slider-button right" onClick={() => {
+              const container = document.querySelector('.movie-grid');
+              container.scrollLeft += container.offsetWidth;
+            }}>›</button>
           </div>
         </div>
       </div>
