@@ -32,7 +32,8 @@ function App() {
         );
 
         if (trailer) {
-          setTrailerUrl(`https://www.youtube.com/embed/${trailer.key}`);
+          // Set the trailer URL with autoplay and mute parameters
+          setTrailerUrl(`https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`);
         }
       } catch (error) {
         console.error("Error fetching movies or trailer:", error);
@@ -50,13 +51,13 @@ function App() {
         <h1>NETFLIX</h1>
       </header>
 
-      
+      {/* Conditionally render video player with autoplay */}
       {trailerUrl && !loading && (
         <div className="video-player">
           <iframe
             width="100%"
             height="400"
-            src={trailerUrl}
+            src={trailerUrl} // Use the trailer URL with autoplay=1
             title="Movie Trailer"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -64,8 +65,8 @@ function App() {
           ></iframe>
         </div>
       )}
- 
-       <div className="movie-container">
+
+      <div className="movie-container">
         <div className="movie-section">
           <h2>Popular on Netflix</h2>
           <div className="movie-grid">
@@ -87,7 +88,7 @@ function App() {
             ))}
           </div>
         </div>
-      </div> 
+      </div>
     </div>
   );
 }
