@@ -113,10 +113,10 @@ h3 {
 }
 
 .video-player {
-  padding-top: 0;
+  
   width: 100%;
-  max-width: 100%;
-  padding: 0 10px;  
+  padding: 0;  
+  margin: 0;
   box-sizing: border-box;  
   margin-bottom: 10px; 
    
@@ -130,7 +130,7 @@ h3 {
   max-width: 1600px;
   border: none;
   display: block;  
-  
+  background: transparent;
 }
 
 
