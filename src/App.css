@@ -28,25 +28,30 @@ h1 {
 
 .movie-container {
   padding-top: 80px;
+  position: relative;
+}
+
+.slider-container {
+  position: relative;
+  padding: 0 50px;
+  margin: 0 -50px;
+  width: 100vw;
 }
 
 .movie-grid {
   display: flex;
   flex-wrap: nowrap;
-  gap: 8px;
-  /* overflow-x: auto; */
-  padding: 2px 20px;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px 0;
   scroll-behavior: smooth;
-  
-}
-
-.movie-grid::-webkit-scrollbar {
-  display: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .movie-card {
+  flex: 0 0 calc((100% - 100px) / 6);
   background: transparent;
-  min-width: 200px;
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -54,18 +59,46 @@ h1 {
   cursor: pointer;
 }
 
-.movie-card:hover {
-  transform: scale(1.1);
-  z-index: 2;
+.slider-button {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: rgba(20, 20, 20, 0.9);
+  color: #fff;
+  border: none;
+  width: 50px;
+  cursor: pointer;
+  font-size: 2.5rem;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
-.movie-card:hover .movie-info {
-  opacity: 1;
+.slider-button:hover {
+  background: rgba(229, 9, 20, 0.9);
+  width: 60px;
+}
+
+.slider-button.left {
+  left: 0;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.slider-button.right {
+  right: 0;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 
 .movie-poster {
   width: 100%;
-  height: 300px;
+  aspect-ratio: 2/3;
   object-fit: cover;
   border-radius: 4px;
 }
@@ -103,7 +136,6 @@ h3 {
 }
 
 .movie-section h2 {
-  
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.8rem;
   color: #fff;
@@ -133,44 +165,15 @@ h3 {
   
 }
 
-
- /* .movie-slider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-} */
-
-/* .movie-card {
-  width: 300px;
-  margin: 0 10px;
-  display: inline-block;
-  transition: transform 0.3s ease;
+.movie-card:hover {
+  transform: scale(1.1);
+  z-index: 2;
 }
 
-.movie-poster {
-  width: 100%;
-  height: 400px;
-  object-fit: cover;
+.movie-card:hover .movie-info {
+  opacity: 1;
 }
 
-.prev,
-.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 2rem;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
+.movie-grid::-webkit-scrollbar {
+  display: none;
 }
-
-.prev {
-  left: 10px;
-}
-
-.next {
-  right: 10px;
-}  */
