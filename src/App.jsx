@@ -27,26 +27,32 @@ function App() {
 
   return (
     <div className="App">
-      <div className="app-header">
-        <h1>Popular Movies</h1>
-      </div>
+      <header className="app-header">
+        <h1>NETFLIX</h1>
+      </header>
       <div className="movie-container">
-        <div className="movie-grid">
-          {movies.map((movie) => (
-            <div key={movie.id} className="movie-card">
-              <img
-                src={`${IMAGE_URL}${movie.poster_path}`}
-                alt={movie.title}
-                className="movie-poster"
-              />
-              <h3>{movie.title}</h3>
-              {/* <p>{movie.release_date}</p>
-            <p>⭐ {movie.vote_average.toFixed(1)}</p> */}
-            </div>
-          ))}
+        <div className="movie-section">
+          <h2>Popular on Netflix</h2>
+          <div className="movie-grid">
+            {movies.map((movie) => (
+              <div key={movie.id} className="movie-card">
+                <img
+                  src={`${IMAGE_URL}${movie.poster_path}`}
+                  alt={movie.title}
+                  className="movie-poster"
+                />
+                <div className="movie-info">
+                  <h3>{movie.title}</h3>
+                  <div className="movie-details">
+                    <span>{new Date(movie.release_date).getFullYear()}</span>
+                    <span>⭐ {movie.vote_average.toFixed(1)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-
     </div>
   );
 }
