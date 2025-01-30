@@ -8,6 +8,8 @@ const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const [trailerUrl, setTrailerUrl] = useState(""); // State to store trailer URL
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch popular movies from TMDB
@@ -17,8 +19,25 @@ function App() {
           `${BASE_URL}/movie/popular?api_key=${API_KEY}`
         );
         setMovies(response.data.results);
+
+        // Fetch the trailer for the most popular movie (first movie in the list)
+        const movieId = response.data.results[0].id; // Get ID of the most popular movie
+        const trailerResponse = await axios.get(
+          `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`
+        );
+
+        // Find the trailer (usually the first video in the list)
+        const trailer = trailerResponse.data.results.find(
+          (video) => video.type === "Trailer"
+        );
+
+        if (trailer) {
+          setTrailerUrl(`https://www.youtube.com/embed/${trailer.key}`);
+        }
       } catch (error) {
-        console.error("Error fetching movies:", error);
+        console.error("Error fetching movies or trailer:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -30,7 +49,23 @@ function App() {
       <header className="app-header">
         <h1>NETFLIX</h1>
       </header>
-      <div className="movie-container">
+
+      
+      {trailerUrl && !loading && (
+        <div className="video-player">
+          <iframe
+            width="100%"
+            height="400"
+            src={trailerUrl}
+            title="Movie Trailer"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      )}
+ 
+       <div className="movie-container">
         <div className="movie-section">
           <h2>Popular on Netflix</h2>
           <div className="movie-grid">
@@ -52,7 +87,7 @@ function App() {
             ))}
           </div>
         </div>
-      </div>
+      </div> 
     </div>
   );
 }
