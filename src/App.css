@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Jersey+15&family=Smooch+Sans:wght@100..900&family=Teko:wght@300..700&display=swap');
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .App {
   background-color: #141414;
   min-height: 100vh;
@@ -10,6 +17,7 @@
 
 .app-header {
   background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(20,20,20,1) 100%);
+  width: 100%;
   padding: 20px 4%;
   position: fixed;
   top: 0;
@@ -99,7 +107,7 @@ h1 {
   border-bottom-left-radius: 8px;
   margin-top: 200px;
   width: 10px;
-  margin-left: 92vw;
+  margin-left: 93vw;
 }
 
 .movie-poster {
