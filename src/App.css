@@ -16,7 +16,13 @@ html, body {
 }
 
 .app-header {
-  background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(20,20,20,1) 100%);
+  background: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 0.9) 0%, 
+    rgba(20, 20, 20, 0.95) 50%,
+    rgba(20, 20, 20, 1) 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   width: 100%;
   padding: 20px 4%;
   position: fixed;
@@ -24,6 +30,71 @@ html, body {
   left: 0;
   right: 0;
   z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.search-container {
+  position: relative;
+  margin-left: 20px;
+  transition: transform 0.3s ease;
+}
+
+.search-container:hover {
+  transform: translateY(-1px);
+}
+
+.search-input {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 12px 45px 12px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  width: 260px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+              0 1px 3px rgba(0, 0, 0, 0.08);
+  letter-spacing: 0.3px;
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(229, 9, 20, 0.7);
+  outline: none;
+  width: 300px;
+  box-shadow: 0 8px 12px rgba(229, 9, 20, 0.15),
+              0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+}
+
+.search-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.search-container:focus-within .search-icon {
+  color: rgba(229, 9, 20, 0.9);
+  transform: translateY(-50%) scale(1.1);
 }
 
 h1 {

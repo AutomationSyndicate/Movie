@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
@@ -10,6 +10,9 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [trailerUrl, setTrailerUrl] = useState(""); // State to store trailer URL
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchTimeout, setSearchTimeout] = useState(null);
 
   useEffect(() => {
     // Fetch popular movies from TMDB
@@ -45,14 +48,65 @@ function App() {
     fetchMovies();
   }, []);
 
+  const handleSearch = async (query) => {
+    if (query.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`
+      );
+      setSearchResults(response.data.results);
+    } catch (error) {
+      console.error("Error searching movies:", error);
+    }
+  };
+
+  const handleSearchInput = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    // Clear existing timeout
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    // Set new timeout for debouncing
+    const timeout = setTimeout(() => {
+      handleSearch(query);
+    }, 500);
+
+    setSearchTimeout(timeout);
+  };
+
+  const displayedMovies = searchQuery ? searchResults : movies;
+
   return (
     <div className="App">
       <header className="app-header">
-        <h1>NETFLIX</h1>
+        <div className="header-content">
+          <h1>NETFLIX</h1>
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search movies..."
+              value={searchQuery}
+              onChange={handleSearchInput}
+              className="search-input"
+            />
+            <div className="search-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
       </header>
 
-      {/* Conditionally render video player with autoplay */}
-      {trailerUrl && !loading && (
+      {trailerUrl && !loading && !searchQuery && (
         <div className="video-player">
           <iframe
             width="100%"
@@ -67,14 +121,14 @@ function App() {
 
       <div className="movie-container">
         <div className="movie-section">
-          <h2>Popular on Netflix</h2>
+          <h2>{searchQuery ? "Search Results" : "Popular on Netflix"}</h2>
           <div className="slider-container">
             <button className="slider-button left" onClick={() => {
               const container = document.querySelector('.movie-grid');
               container.scrollLeft -= container.offsetWidth;
             }}>‹</button>
             <div className="movie-grid">
-              {movies.map((movie) => (
+              {displayedMovies.map((movie) => (
                 <div key={movie.id} className="movie-card">
                   <img
                     src={`${IMAGE_URL}${movie.poster_path}`}
