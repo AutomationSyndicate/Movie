@@ -24,12 +24,13 @@ html, body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   width: 100%;
-  padding: 20px 4%;
+  padding: 0px 4%;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  
 }
 
 .header-content {
@@ -236,7 +237,6 @@ h3 {
   padding: 0 10px;  
   box-sizing: border-box;  
   margin-bottom: 10px; 
-   
 }
 
 .video-player iframe {
@@ -247,7 +247,6 @@ h3 {
   max-width: 1600px;
   border: none;
   display: block;  
-  
 }
 
 .movie-card:hover {
@@ -302,4 +301,8 @@ nav ul li a:hover {
   padding: 2rem;
   text-align: center;
   text-wrap: auto;
+
+.logo {
+  height: 40px;  /* Adjust the height as needed */
+  object-fit: contain;
 }
