@@ -1,0 +1,33 @@
+.genremovie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .genremovie-item {
+    text-align: center;
+    background-color: #222;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .genremovie-item:hover {
+    transform: scale(1.05);
+  }
+  
+  .genremovie-poster {
+    width: 100%;
+    height: auto;
+    border-bottom: 5px solid #444;
+  }
+  
+  .genremovie-title {
+    color: white;
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: #333;
+    margin: 0;
+  }

@@ -262,6 +262,46 @@ h3 {
   display: none;
 }
 
+/*Genre*/
+nav {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  text-wrap: auto;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+  text-wrap: auto;
+}
+
+nav ul li {
+  margin: 0;
+  text-wrap: auto;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  display: block;
+  text-wrap: auto;
+}
+
+nav ul li a:hover {
+  background-color: #575757;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  text-wrap: auto;
+
 .logo {
   height: 40px;  /* Adjust the height as needed */
   object-fit: contain;
