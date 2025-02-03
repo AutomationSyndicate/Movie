@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+import logo from './assets/logo.png'; 
 
 const API_KEY = "19517c2997a6f18d7a87adee2d219374"; // Replace with your TMDB API key
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -87,7 +88,10 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="header-content">
-          <h1>NETFLIX</h1>
+          {/* Logo added on the left */}
+          <img src={logo} alt="App Logo" className="logo" style={{ height: "100px", width: "auto" }} />
+          
+          {/* Search bar */}
           <div className="search-container">
             <input
               type="text"
@@ -106,6 +110,7 @@ function App() {
         </div>
       </header>
 
+      {/* Show trailer */}
       {trailerUrl && !loading && !searchQuery && (
         <div className="video-player">
           <iframe
@@ -119,6 +124,7 @@ function App() {
         </div>
       )}
 
+      {/* Display movies */}
       <div className="movie-container">
         <div className="movie-section">
           <h2>{searchQuery ? "Search Results" : "Popular on Netflix"}</h2>
