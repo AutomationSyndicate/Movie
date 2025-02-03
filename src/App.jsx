@@ -164,19 +164,20 @@ function App() {
           </div>
         </header>
 
-        {trailerUrl && !loading && !searchQuery && (
-          <div className="video-player">
-            <iframe
-              width="100%"
-              height="400"
-              src={trailerUrl}
-              title="Movie Trailer"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        )}
 
+        <div className="rslider">
+              {displayedMovies.map((movie, index) => (
+                <span key={movie.id} style={{ '--i': index + 1 }}>
+                  <img
+                    src={`${IMAGE_URL}${movie.poster_path}`}
+                    alt={movie.title}
+                    className="slider-image"
+                  />
+                </span>
+              ))}
+            </div>
+
+        
         <div>
           <h1>Movie Categories</h1>
           <nav>
