@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import axios from "axios";
 import "./App.css";
+import CategoryPage from './CategoryPage';
 
 const API_KEY = "19517c2997a6f18d7a87adee2d219374"; // Replace with your TMDB API key
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -13,6 +15,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchTimeout, setSearchTimeout] = useState(null);
+  const [genres, setGenres] = useState([]);
 
   useEffect(() => {
     // Fetch popular movies from TMDB
@@ -28,6 +31,13 @@ function App() {
         const trailerResponse = await axios.get(
           `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`
         );
+
+        // Fetch the list of genres from TMDb when the app loads
+      const movieGenre = await axios.get(
+        `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`
+      );
+      setGenres(movieGenre.data.genres);
+    
 
         // Find the trailer (usually the first video in the list)
         const trailer = trailerResponse.data.results.find(
@@ -84,6 +94,7 @@ function App() {
   const displayedMovies = searchQuery ? searchResults : movies;
 
   return (
+    <Router>
     <div className="App">
       <header className="app-header">
         <div className="header-content">
@@ -119,6 +130,29 @@ function App() {
         </div>
       )}
 
+    
+      <div>
+        <h1>Movie Categories</h1>
+        <nav>
+          <ul>
+          <li>
+              <Link to="/">Home</Link> {/* Add Home link */}
+            </li>
+            {genres.map(genre => (
+              <li key={genre.id}>
+                <Link to={`/category/${genre.id}`}>{genre.name}</Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <Routes>
+          {/* Define route for each category page */}
+          <Route path="/category/:genreId" element={<CategoryPage />} />
+        </Routes>
+      </div>
+    
+
       <div className="movie-container">
         <div className="movie-section">
           <h2>{searchQuery ? "Search Results" : "Popular on Netflix"}</h2>
@@ -153,6 +187,7 @@ function App() {
         </div>
       </div>
     </div>
+    </Router>
   );
 }
 
