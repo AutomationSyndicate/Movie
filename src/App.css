@@ -309,26 +309,34 @@ nav ul li a:hover {
 }
 
 
-/*Rotating Carousel*/
-
-.rslider {
+/*3D Movie Poster Styling*/
+.rotate-slider {
   position: relative;
-  width: 300px;
-  height: 400px;
+  width: 200px;
+  height: 300px;
   transform-style: preserve-3d;
   animation: rotate 30s linear infinite;
 }
 
+.rotate-slider-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-right: 500px;
+  padding-top: 350px;
+  padding-bottom: 160px;
+}
+
 @keyframes rotate {
   0% {
-      transform: perspective(1000px) rotateY(0deg);
+    transform: perspective(1000px) rotateY(0deg);
   }
   100% {
-      transform: perspective(1000px) rotateY(360deg);
+    transform: perspective(1000px) rotateY(360deg);
   }
 }
 
-.rslider span {
+.rotate-slider span {
   position: absolute;
   top: 0;
   left: 0;
@@ -336,20 +344,19 @@ nav ul li a:hover {
   height: 100%;
   transform-origin: center;
   transform-style: preserve-3d;
-  transform: rotateY(calc(var(--i) * 45deg)) translateZ(500px); /* Adjust Z value for spacing */
+  transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); /* Adjust Z value for spacing */
 }
 
-.rslider span img {
+.rotate-slider span img {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  
   border-radius: 10px;
   transition: transform 2s;
 }
 
-.rslider span:hover img {
+.rotate-slider span:hover img {
   transform: translateY(-50px) scale(1.2);
 }

@@ -19,6 +19,7 @@ function App() {
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [genres, setGenres] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [posters, setPosters] = useState([]);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -37,6 +38,11 @@ function App() {
           `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=en-US`
         );
         setGenres(movieGenre.data.genres);
+
+        const moviePoster = await axios.get(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
+        );
+        setPosters(moviePoster.data.results.slice(0, 8))
 
         const trailer = trailerResponse.data.results.find(
           (video) => video.type === "Trailer"
@@ -165,17 +171,19 @@ function App() {
         </header>
 
 
-        <div className="rslider">
-              {displayedMovies.map((movie, index) => (
-                <span key={movie.id} style={{ '--i': index + 1 }}>
-                  <img
-                    src={`${IMAGE_URL}${movie.poster_path}`}
-                    alt={movie.title}
-                    className="slider-image"
-                  />
-                </span>
-              ))}
-            </div>
+       {/* 3D Movie Poster Section*/}
+       <div className="rotate-slider-container">
+          <div className="rotate-slider">
+            {posters.slice(0, 8).map((movie, index) => (
+              <span key={movie.id} style={{ "--i": index + 1 }}>
+                <img
+                  src={`${IMAGE_URL}${movie.poster_path}`}
+                  alt={movie.title}
+                />
+              </span>
+            ))}
+          </div>
+        </div>
 
         
         <div>
