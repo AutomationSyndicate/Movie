@@ -5,6 +5,8 @@ import "./App.css";
 import CategoryPage from "./CategoryPage";
 import logo from "./assets/logo.png";
 import Modal from "./Modal";
+import { Menu } from "lucide-react";
+import react from "react"
 
 const API_KEY = "19517c2997a6f18d7a87adee2d219374"; // Replace with your TMDB API key
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -121,6 +123,9 @@ function App() {
   };
 
   const displayedMovies = searchQuery ? searchResults : movies;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+
 
   return (
     <Router>
@@ -166,9 +171,57 @@ function App() {
                   />
                 </svg>
               </div>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="flex items-center ml-4 focus:outline-none"
+              >
+                <Menu size={24} className="text-white" />
+              </button>
             </div>
           </div>
         </header>
+
+        <main className="p-4">
+  <h1>Welcome to the App</h1>
+  <p>Select a menu option to get started.</p>
+  {menuOpen && (
+    <nav className="relative bg-white text-black shadow-lg rounded border border-red-500 w-48">
+      <ul className="flex flex-col p-2">
+        <li
+          className="p-2 hover:bg-gray-200 cursor-pointer"
+          onClick={() => setMenuOpen(false)}
+        >
+          <a href="#home">Home</a>
+        </li>
+        <li
+          className="p-2 hover:bg-gray-200 cursor-pointer relative"
+          onClick={() => setCategoriesOpen(!categoriesOpen)}
+        >
+          <a href="#categories">Categories</a>
+          {categoriesOpen && (
+            <ul className="flex flex-col bg-white shadow-lg rounded border-t border-red-500 w-full">
+              <li className="p-2 hover:bg-gray-200">
+                <a href="#action">Action</a>
+              </li>
+              <li className="p-2 hover:bg-gray-200">
+                <a href="#comedy">Comedy</a>
+              </li>
+              <li className="p-2 hover:bg-gray-200">
+                <a href="#drama">Drama</a>
+              </li>
+            </ul>
+          )}
+        </li>
+      </ul>
+    </nav>
+  )}
+</main>
+
+
+        
+        
+      
+
 
 
        {/* 3D Movie Poster Section*/}
@@ -186,7 +239,7 @@ function App() {
         </div>
 
         
-        <div>
+        {/* <div>
           <h1>Movie Categories</h1>
           <nav>
             <ul>
@@ -204,11 +257,11 @@ function App() {
           <Routes>
             <Route path="/category/:genreId" element={<CategoryPage />} />
           </Routes>
-        </div>
+        </div> */}
 
         <div className="movie-container">
           <div className="movie-section">
-            <h2>{searchQuery ? "Search Results" : "Popular on Netflix"}</h2>
+            <h2>{searchQuery ? "Search Results" : "Popular on AS"}</h2>
             <div className="slider-container">
               <button
                 className="slider-button left"
