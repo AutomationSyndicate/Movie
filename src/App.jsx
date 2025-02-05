@@ -10,6 +10,12 @@ const TMDB_API_KEY = "19517c2997a6f18d7a87adee2d219374"; // Replace with your TM
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 
+const LoadingSpinner = () => (
+  <div className="loader-container">
+    <div className="loader"></div>
+  </div>
+);
+
 function App() {
   const [movies, setMovies] = useState([]);
   const [trendingMovies, setTrendingMovies] = useState([]);
@@ -23,37 +29,45 @@ function App() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showTrailerModal, setShowTrailerModal] = useState(false);
   const [showRotateSlider, setShowRotateSlider] = useState(true);
-  const [selectedGenre, setSelectedGenre] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState("");
+  const [favorites, setFavorites] = useState([]);
 
   const predefinedGenres = [
-    { id: 28, name: 'Action' },
-    { id: 12, name: 'Adventure' },
-    { id: 16, name: 'Animation' },
-    { id: 35, name: 'Comedy' },
-    { id: 80, name: 'Crime' },
-    { id: 99, name: 'Documentary' },
-    { id: 18, name: 'Drama' },
-    { id: 10751, name: 'Family' },
-    { id: 14, name: 'Fantasy' },
-    { id: 36, name: 'History' },
-    { id: 27, name: 'Horror' },
-    { id: 10402, name: 'Music' },
-    { id: 9648, name: 'Mystery' },
-    { id: 10749, name: 'Romance' },
-    { id: 878, name: 'Science Fiction' },
-    { id: 10770, name: 'TV Movie' },
-    { id: 53, name: 'Thriller' },
-    { id: 10752, name: 'War' }
+    { id: 28, name: "Action" },
+    { id: 12, name: "Adventure" },
+    { id: 16, name: "Animation" },
+    { id: 35, name: "Comedy" },
+    { id: 80, name: "Crime" },
+    { id: 99, name: "Documentary" },
+    { id: 18, name: "Drama" },
+    { id: 10751, name: "Family" },
+    { id: 14, name: "Fantasy" },
+    { id: 36, name: "History" },
+    { id: 27, name: "Horror" },
+    { id: 10402, name: "Music" },
+    { id: 9648, name: "Mystery" },
+    { id: 10749, name: "Romance" },
+    { id: 878, name: "Science Fiction" },
+    { id: 10770, name: "TV Movie" },
+    { id: 53, name: "Thriller" },
+    { id: 10752, name: "War" },
   ];
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const [popularResponse, trendingResponse, upcomingResponse, moviePoster] = await Promise.all([
+        const [
+          popularResponse,
+          trendingResponse,
+          upcomingResponse,
+          moviePoster,
+        ] = await Promise.all([
           axios.get(`${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}`),
           axios.get(`${BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}`),
           axios.get(`${BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}`),
-          axios.get(`${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`)
+          axios.get(
+            `${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`
+          ),
         ]);
 
         setMovies(popularResponse.data.results);
@@ -85,7 +99,9 @@ function App() {
 
       const movieDetails = {
         ...movieResponse.data,
-        trailerUrl: trailer ? `https://www.youtube.com/embed/${trailer.key}` : null,
+        trailerUrl: trailer
+          ? `https://www.youtube.com/embed/${trailer.key}`
+          : null,
       };
 
       setSelectedMovie(movieDetails);
@@ -147,32 +163,54 @@ function App() {
     setSearchTimeout(timeout);
   };
 
-  const handleLogoClick = (e) => {
+  const handleLogoClick = async (e) => {
     e.preventDefault();
-    setSearchQuery('');
+    setSearchQuery("");
     setSearchResults([]);
+    setSelectedGenre(""); // Reset genre selection to empty string
     setShowRotateSlider(true);
+
+    try {
+      setLoading(true);
+      const [popularResponse, trendingResponse, upcomingResponse] =
+        await Promise.all([
+          axios.get(`${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}`),
+          axios.get(`${BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}`),
+          axios.get(`${BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}`),
+        ]);
+
+      setMovies(popularResponse.data.results);
+      setTrendingMovies(trendingResponse.data.results);
+      setUpcomingMovies(upcomingResponse.data.results);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    } finally {
+      setLoading(false);
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleGenreChange = async (e) => {
     const genreId = e.target.value;
     setSelectedGenre(genreId);
-    
-    if (genreId === '') {
+
+    if (genreId === "") {
       // Reset to default view and scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
       setShowRotateSlider(true);
-      const [popularResponse, trendingResponse, upcomingResponse] = await Promise.all([
-        axios.get(`${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}`),
-        axios.get(`${BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}`),
-        axios.get(`${BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}`)
-      ]);
+      const [popularResponse, trendingResponse, upcomingResponse] =
+        await Promise.all([
+          axios.get(`${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}`),
+          axios.get(`${BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}`),
+          axios.get(`${BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}`),
+        ]);
       setMovies(popularResponse.data.results);
       setTrendingMovies(trendingResponse.data.results);
       setUpcomingMovies(upcomingResponse.data.results);
       return;
     }
-    
+
     try {
       setLoading(true);
       const response = await axios.get(
@@ -187,9 +225,31 @@ function App() {
     }
   };
 
+  const addToFavorites = (movie) => {
+    setFavorites((prevFavorites) => [...prevFavorites, movie]);
+  };
+
+  const removeFromFavorites = (movieId) => {
+    setFavorites((prevFavorites) =>
+      prevFavorites.filter((movie) => movie.id !== movieId)
+    );
+  };
+
+  const isFavorite = (movieId) => {
+    return favorites.some((movie) => movie.id === movieId);
+  };
+
+  const scrollToFavorites = () => {
+    const favoritesSection = document.querySelector(".favorites-section");
+    if (favoritesSection) {
+      favoritesSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <Router>
       <div className="App">
+        {loading && <LoadingSpinner />}
         <header className="app-header">
           <div className="header-content">
             <Link to="/" onClick={handleLogoClick}>
@@ -200,35 +260,39 @@ function App() {
                 style={{ height: "100px", width: "auto" }}
               />
             </Link>
-
+            <nav>
+              <button onClick={scrollToFavorites} className="favorites-link">
+                ⭐Favorites
+              </button>
+            </nav>
             <div className="search-container">
               <div className="search-input-container">
-              <input
-                type="text"
-                placeholder="Search movies..."
-                value={searchQuery}
-                onChange={handleSearchInput}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    setShowRotateSlider(false);
-                    handleSearch(searchQuery);
-                  }
-                }}
-                className="search-input"
-              />
-              <select 
-                value={selectedGenre}
-                onChange={handleGenreChange}
-                className="genre-select"
-              >
-                <option value="">Home</option>
-                {predefinedGenres.map((genre) => (
-                  <option key={genre.id} value={genre.id}>
-                    {genre.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <input
+                  type="text"
+                  placeholder="Search movies..."
+                  value={searchQuery}
+                  onChange={handleSearchInput}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setShowRotateSlider(false);
+                      handleSearch(searchQuery);
+                    }
+                  }}
+                  className="search-input"
+                />
+                <select
+                  value={selectedGenre}
+                  onChange={handleGenreChange}
+                  className="genre-select"
+                >
+                  <option value="">Home</option>
+                  {predefinedGenres.map((genre) => (
+                    <option key={genre.id} value={genre.id}>
+                      {genre.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         </header>
@@ -281,9 +345,24 @@ function App() {
                         <div className="movie-info">
                           <h3>{movie.title}</h3>
                           <div className="movie-details">
-                            <span>{new Date(movie.release_date).getFullYear()}</span>
+                            <span>
+                              {new Date(movie.release_date).getFullYear()}
+                            </span>
                             <span>⭐ {movie.vote_average.toFixed(1)}</span>
                           </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              isFavorite(movie.id)
+                                ? removeFromFavorites(movie.id)
+                                : addToFavorites(movie);
+                            }}
+                            className="favorite-button"
+                          >
+                            {isFavorite(movie.id)
+                              ? "Remove from Favorites"
+                              : "Add to Favorites"}
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -307,7 +386,9 @@ function App() {
                   <button
                     className="slider-button left"
                     onClick={() => {
-                      const container = document.querySelector(".trending-movie-grid");
+                      const container = document.querySelector(
+                        ".trending-movie-grid"
+                      );
                       container.scrollLeft -= container.offsetWidth;
                     }}
                   >
@@ -328,9 +409,24 @@ function App() {
                         <div className="movie-info">
                           <h3>{movie.title}</h3>
                           <div className="movie-details">
-                            <span>{new Date(movie.release_date).getFullYear()}</span>
+                            <span>
+                              {new Date(movie.release_date).getFullYear()}
+                            </span>
                             <span>⭐ {movie.vote_average.toFixed(1)}</span>
                           </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              isFavorite(movie.id)
+                                ? removeFromFavorites(movie.id)
+                                : addToFavorites(movie);
+                            }}
+                            className="favorite-button"
+                          >
+                            {isFavorite(movie.id)
+                              ? "Remove from Favorites"
+                              : "Add to Favorites"}
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -338,7 +434,9 @@ function App() {
                   <button
                     className="slider-button right"
                     onClick={() => {
-                      const container = document.querySelector(".trending-movie-grid");
+                      const container = document.querySelector(
+                        ".trending-movie-grid"
+                      );
                       container.scrollLeft += container.offsetWidth;
                     }}
                   >
@@ -354,7 +452,9 @@ function App() {
                   <button
                     className="slider-button left"
                     onClick={() => {
-                      const container = document.querySelector(".upcoming-movie-grid");
+                      const container = document.querySelector(
+                        ".upcoming-movie-grid"
+                      );
                       container.scrollLeft -= container.offsetWidth;
                     }}
                   >
@@ -375,9 +475,24 @@ function App() {
                         <div className="movie-info">
                           <h3>{movie.title}</h3>
                           <div className="movie-details">
-                            <span>{new Date(movie.release_date).getFullYear()}</span>
+                            <span>
+                              {new Date(movie.release_date).getFullYear()}
+                            </span>
                             <span>⭐ {movie.vote_average.toFixed(1)}</span>
                           </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              isFavorite(movie.id)
+                                ? removeFromFavorites(movie.id)
+                                : addToFavorites(movie);
+                            }}
+                            className="favorite-button"
+                          >
+                            {isFavorite(movie.id)
+                              ? "Remove from Favorites"
+                              : "Add to Favorites"}
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -385,7 +500,9 @@ function App() {
                   <button
                     className="slider-button right"
                     onClick={() => {
-                      const container = document.querySelector(".upcoming-movie-grid");
+                      const container = document.querySelector(
+                        ".upcoming-movie-grid"
+                      );
                       container.scrollLeft += container.offsetWidth;
                     }}
                   >
@@ -399,12 +516,16 @@ function App() {
           {/* Show genre results when a genre is selected */}
           {selectedGenre && (
             <div className="movie-section">
-              <h2>{predefinedGenres.find(g => g.id === parseInt(selectedGenre))?.name || 'Genre Movies'}</h2>
+              <h2>
+                {predefinedGenres.find((g) => g.id === parseInt(selectedGenre))
+                  ?.name || "Genre Movies"}
+              </h2>
               <div className="slider-container">
                 <button
                   className="slider-button left"
                   onClick={() => {
-                    const container = document.querySelector(".genre-movie-grid");
+                    const container =
+                      document.querySelector(".genre-movie-grid");
                     container.scrollLeft -= container.offsetWidth;
                   }}
                 >
@@ -425,9 +546,24 @@ function App() {
                       <div className="movie-info">
                         <h3>{movie.title}</h3>
                         <div className="movie-details">
-                          <span>{new Date(movie.release_date).getFullYear()}</span>
+                          <span>
+                            {new Date(movie.release_date).getFullYear()}
+                          </span>
                           <span>⭐ {movie.vote_average.toFixed(1)}</span>
                         </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            isFavorite(movie.id)
+                              ? removeFromFavorites(movie.id)
+                              : addToFavorites(movie);
+                          }}
+                          className="favorite-button"
+                        >
+                          {isFavorite(movie.id)
+                            ? "Remove from Favorites"
+                            : "Add to Favorites"}
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -435,7 +571,8 @@ function App() {
                 <button
                   className="slider-button right"
                   onClick={() => {
-                    const container = document.querySelector(".genre-movie-grid");
+                    const container =
+                      document.querySelector(".genre-movie-grid");
                     container.scrollLeft += container.offsetWidth;
                   }}
                 >
@@ -453,7 +590,9 @@ function App() {
                 <button
                   className="slider-button left"
                   onClick={() => {
-                    const container = document.querySelector(".search-results-grid");
+                    const container = document.querySelector(
+                      ".search-results-grid"
+                    );
                     container.scrollLeft -= container.offsetWidth;
                   }}
                 >
@@ -467,16 +606,37 @@ function App() {
                       onClick={() => handleMovieClick(movie)}
                     >
                       <img
-                        src={movie.poster_path ? `${IMAGE_URL}${movie.poster_path}` : 'placeholder-image-url'}
+                        src={
+                          movie.poster_path
+                            ? `${IMAGE_URL}${movie.poster_path}`
+                            : "placeholder-image-url"
+                        }
                         alt={movie.title}
                         className="movie-poster"
                       />
                       <div className="movie-info">
                         <h3>{movie.title}</h3>
                         <div className="movie-details">
-                          <span>{movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}</span>
+                          <span>
+                            {movie.release_date
+                              ? new Date(movie.release_date).getFullYear()
+                              : "N/A"}
+                          </span>
                           <span>⭐ {movie.vote_average.toFixed(1)}</span>
                         </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            isFavorite(movie.id)
+                              ? removeFromFavorites(movie.id)
+                              : addToFavorites(movie);
+                          }}
+                          className="favorite-button"
+                        >
+                          {isFavorite(movie.id)
+                            ? "Remove from Favorites"
+                            : "Add to Favorites"}
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -484,7 +644,71 @@ function App() {
                 <button
                   className="slider-button right"
                   onClick={() => {
-                    const container = document.querySelector(".search-results-grid");
+                    const container = document.querySelector(
+                      ".search-results-grid"
+                    );
+                    container.scrollLeft += container.offsetWidth;
+                  }}
+                >
+                  ›
+                </button>
+              </div>
+            </div>
+          )}
+
+          {favorites.length > 0 && (
+            <div
+              className="movie-section favorites-section"
+              style={{ background: "var(--existing-background)" }}
+            >
+              <h2>⭐Favorites</h2>
+              <div className="slider-container">
+                <button
+                  className="slider-button left"
+                  onClick={() => {
+                    const container = document.querySelector(".favorites-grid");
+                    container.scrollLeft -= container.offsetWidth;
+                  }}
+                >
+                  ‹
+                </button>
+                <div className="movie-grid favorites-grid">
+                  {favorites.map((movie) => (
+                    <div
+                      key={movie.id}
+                      className="movie-card"
+                      onClick={() => handleMovieClick(movie)}
+                    >
+                      <img
+                        src={`${IMAGE_URL}${movie.poster_path}`}
+                        alt={movie.title}
+                        className="movie-poster"
+                      />
+                      <div className="movie-info">
+                        <h3>{movie.title}</h3>
+                        <div className="movie-details">
+                          <span>
+                            {new Date(movie.release_date).getFullYear()}
+                          </span>
+                          <span>⭐ {movie.vote_average.toFixed(1)}</span>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFromFavorites(movie.id);
+                          }}
+                          className="favorite-button"
+                        >
+                          Remove from Favorites
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className="slider-button right"
+                  onClick={() => {
+                    const container = document.querySelector(".favorites-grid");
                     container.scrollLeft += container.offsetWidth;
                   }}
                 >
@@ -496,11 +720,18 @@ function App() {
         </div>
 
         {selectedMovie && (
-          <Modal movie={selectedMovie} onClose={handleCloseModal} onShowTrailer={handleShowTrailer} />
+          <Modal
+            movie={selectedMovie}
+            onClose={handleCloseModal}
+            onShowTrailer={handleShowTrailer}
+          />
         )}
 
         {showTrailerModal && (
-          <TrailerModal trailerUrl={trailerUrl} onClose={handleCloseTrailerModal} />
+          <TrailerModal
+            trailerUrl={trailerUrl}
+            onClose={handleCloseTrailerModal}
+          />
         )}
       </div>
     </Router>
