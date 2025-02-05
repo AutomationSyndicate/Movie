@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
-import CategoryPage from "./CategoryPage";
 import logo from "./assets/logo.png";
 import Modal from "./Modal";
 import TrailerModal from "./TrailerModal";
@@ -20,28 +19,53 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchTimeout, setSearchTimeout] = useState(null);
-  const [genres, setGenres] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
   const [posters, setPosters] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const [showTrailerModal, setShowTrailerModal] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const [showCategories, setShowCategories] = useState(false);
+
+  const [showRotateSlider, setShowRotateSlider] = useState(true);
+  const [selectedGenre, setSelectedGenre] = useState('');
+
+  const predefinedGenres = [
+    { id: 'Genre', name: 'Genre' },
+    { id: 28, name: 'Action' },
+    { id: 12, name: 'Adventure' },
+    { id: 16, name: 'Animation' },
+    { id: 35, name: 'Comedy' },
+    { id: 80, name: 'Crime' },
+    { id: 99, name: 'Documentary' },
+    { id: 18, name: 'Drama' },
+    { id: 10751, name: 'Family' },
+    { id: 14, name: 'Fantasy' },
+    { id: 36, name: 'History' },
+    { id: 27, name: 'Horror' },
+    { id: 10402, name: 'Music' },
+    { id: 9648, name: 'Mystery' },
+    { id: 10749, name: 'Romance' },
+    { id: 878, name: 'Science Fiction' },
+    { id: 10770, name: 'TV Movie' },
+    { id: 53, name: 'Thriller' },
+    { id: 10752, name: 'War' }
+  ];
+
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const [popularResponse, trendingResponse, upcomingResponse, genreResponse, moviePoster] = await Promise.all([
+
+        const [popularResponse, trendingResponse, upcomingResponse, moviePoster] = await Promise.all([
           axios.get(`${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}`),
           axios.get(`${BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}`),
           axios.get(`${BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}`),
-          axios.get(`${BASE_URL}/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`),
+
           axios.get(`${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`)
         ]);
 
         setMovies(popularResponse.data.results);
         setTrendingMovies(trendingResponse.data.results);
         setUpcomingMovies(upcomingResponse.data.results);
-        setGenres(genreResponse.data.genres);
+
+
         setPosters(moviePoster.data.results.slice(0, 8));
       } catch (error) {
         console.error("Error fetching movies or trailer:", error);
@@ -130,18 +154,48 @@ function App() {
     setSearchTimeout(timeout);
   };
 
-  const displayedMovies = searchQuery ? searchResults : movies;
-  const toggleMenu = () => setShowMenu(!showMenu);
-  const toggleCategories = () => setShowCategories(!showCategories);
 
-  const categories = ["Action", "Comedy", "Drama", "Horror", "Sci-Fi"];
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    setSearchQuery('');
+    setSearchResults([]);
+    setShowRotateSlider(true);
+  };
+
+  const handleGenreChange = async (e) => {
+    const genreId = e.target.value;
+    setSelectedGenre(genreId);
+    
+    if (genreId === 'home') {
+      setSearchResults([]);
+      setShowRotateSlider(true);
+      return;
+    }
+    
+    if (genreId) {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genreId}`
+        );
+        setSearchResults(response.data.results);
+        setShowRotateSlider(false);
+      } catch (error) {
+        console.error("Error fetching genre movies:", error);
+      }
+    } else {
+      setSearchResults([]);
+      setShowRotateSlider(true);
+    }
+  };
+
 
   return (
     <Router>
       <div className="App">
         <header className="app-header">
           <div className="header-content">
-            <Link to="/">
+            <Link to="/" onClick={handleLogoClick}>
+
               <img
                 src={logo}
                 alt="App Logo"
@@ -156,31 +210,27 @@ function App() {
                 placeholder="Search movies..."
                 value={searchQuery}
                 onChange={handleSearchInput}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setShowRotateSlider(false);
+                    handleSearch(searchQuery);
+                  }
+                }}
                 className="search-input"
               />
-              <div className="search-icon">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+  
+              <div className="genre-dropdown">
+                <select 
+                  className="genre-select"
+                  value={selectedGenre}
+                  onChange={handleGenreChange}
                 >
-                  <path
-                    d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M21 21L16.65 16.65"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                  {predefinedGenres.map((genre) => (
+                    <option key={genre.id} value={genre.id}>
+                      {genre.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
             {/* Menu Dropdown */}
@@ -216,38 +266,22 @@ function App() {
         </header>
 
         {/* 3D Movie Poster Section*/}
-        <div className="rotate-slider-container">
-          <div className="rotate-slider">
-            {posters.slice(0, 8).map((movie, index) => (
-              <span key={movie.id} style={{ "--i": index + 1 }}>
-                <img
-                  src={`${IMAGE_URL}${movie.poster_path}`}
-                  alt={movie.title}
-                />
-              </span>
-            ))}
-          </div>
-        </div>
 
-        <div>
-          <h1>Movie Categories</h1>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              {genres.map((genre) => (
-                <li key={genre.id}>
-                  <Link to={`/category/${genre.id}`}>{genre.name}</Link>
-                </li>
+        {showRotateSlider && (
+          <div className="rotate-slider-container">
+            <div className="rotate-slider">
+              {posters.slice(0, 8).map((movie, index) => (
+                <span key={movie.id} style={{ "--i": index + 1 }}>
+                  <img
+                    src={`${IMAGE_URL}${movie.poster_path}`}
+                    alt={movie.title}
+                  />
+                </span>
               ))}
-            </ul>
-          </nav>
+            </div>
 
-          <Routes>
-            <Route path="/category/:genreId" element={<CategoryPage />} />
-          </Routes>
-        </div>
+          </div>
+        )}
 
         <div className="movie-container">
           {/* Search Results Section */}
@@ -306,6 +340,7 @@ function App() {
             </div>
           )}
 
+
           {/* Only show other sections when not searching */}
           {!searchQuery && (
             <>
@@ -355,6 +390,7 @@ function App() {
                   </button>
                 </div>
               </div>
+
 
               <div className="movie-section">
                 <h2>Trending Movies</h2>
