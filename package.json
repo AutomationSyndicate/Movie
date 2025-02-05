@@ -15,6 +15,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.5",
     "react-transition-group": "^4.4.5",
+    "react-youtube": "^10.1.0",
     "swiper": "^11.2.1"
   },
   "devDependencies": {
