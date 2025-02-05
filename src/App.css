@@ -359,3 +359,55 @@ nav ul li a:hover {
 .rotate-slider span:hover img {
   transform: translateY(-50px) scale(1.2);
 }
+
+/*menu*/
+.menu-container {
+  position: relative;
+  background-color: rgb(51, 50, 50);
+  
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dropdown {
+  position: fixed; /* Position the dropdown fixed on the screen */
+  top: 80px; /* Adjust the top position to move the menu down */
+  left: 0;   /* Align the dropdown to the left side of the page */
+  background-color: rgb(58, 57, 57);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100; /* Ensure dropdown is on top of other elements */
+}
+
+.dropdown-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.categories-dropdown {
+  position: relative; /* Allow categories dropdown to be inside */
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: 101; /* Keep the categories dropdown above the main menu */
+}
+
+.categories-dropdown-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+/* Additional styles for hover effects */
+.categories-dropdown-item:hover,
+.dropdown-item:hover {
+  background-color: hsl(171, 8%, 83%);
+}

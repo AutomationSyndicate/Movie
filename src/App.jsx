@@ -24,6 +24,8 @@ function App() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [posters, setPosters] = useState([]);
   const [showTrailerModal, setShowTrailerModal] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -129,6 +131,10 @@ function App() {
   };
 
   const displayedMovies = searchQuery ? searchResults : movies;
+  const toggleMenu = () => setShowMenu(!showMenu);
+  const toggleCategories = () => setShowCategories(!showCategories);
+
+  const categories = ["Action", "Comedy", "Drama", "Horror", "Sci-Fi"];
 
   return (
     <Router>
@@ -176,6 +182,35 @@ function App() {
                   />
                 </svg>
               </div>
+            </div>
+            {/* Menu Dropdown */}
+            <div className="menu-container">
+              <button onClick={toggleMenu} className="menu-button">
+                Menu
+              </button>
+              {showMenu && (
+                <div className="dropdown">
+                  <Link to="/" className="dropdown-item">
+                    Home
+                  </Link>
+                  <div className="dropdown-item" onClick={toggleCategories}>
+                    Categories
+                    {showCategories && (
+                      <div className="categories-dropdown">
+                        {categories.map((category, index) => (
+                          <Link
+                            key={index}
+                            to={`/categories/${category}`}
+                            className="categories-dropdown-item"
+                          >
+                            {category}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </header>
