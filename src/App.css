@@ -44,74 +44,77 @@ html, body {
 
 .search-container {
   position: relative;
-  margin-left: 20px;
-  transition: transform 0.3s ease;
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 20px;
 }
 
-.search-container:hover {
+.search-input-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  padding: 8px 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.search-input-container:hover,
+.search-input-container:focus-within {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   transform: translateY(-1px);
 }
 
 .search-input {
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  flex: 1;
+  background: transparent;
+  border: none;
   color: white;
-  padding: 12px 45px 12px 20px;
-  border-radius: 12px;
-  font-size: 15px;
-  width: 260px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
-              0 1px 3px rgba(0, 0, 0, 0.08);
-  letter-spacing: 0.3px;
+  font-size: 16px;
+  padding: 8px 0;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
+.search-input:hover,
 .search-input:focus {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(229, 9, 20, 0.7);
-  outline: none;
-  width: 300px;
-  box-shadow: 0 8px 12px rgba(229, 9, 20, 0.15),
-              0 3px 6px rgba(0, 0, 0, 0.1);
+  color: rgba(255, 255, 255, 1);
 }
 
 .search-input::placeholder {
   color: rgba(255, 255, 255, 0.6);
-  font-weight: 300;
+  transition: color 0.3s ease;
 }
 
-.search-icon {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.6);
-  pointer-events: none;
-  transition: all 0.3s ease;
+.search-input:hover::placeholder,
+.search-input:focus::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.genre-select {
+  background: transparent;
+  border: none;
+  color: white;
   font-size: 16px;
+  padding: 8px;
+  margin-left: 12px;
+  cursor: pointer;
+  outline: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
 }
 
-.search-container:focus-within .search-icon {
-  color: rgba(229, 9, 20, 0.9);
-  transform: translateY(-50%) scale(1.1);
+.genre-select:hover {
+  color: rgba(255, 255, 255, 1);
+  border-left-color: rgba(255, 255, 255, 0.3);
 }
 
-h1 {
-  margin: 0;
-  color: #e50914;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2rem;
-  text-align: left;
-}
-
-.movie-container {
-  padding-top: 80px;
-  position: relative;
+.genre-select option {
+  background: #1a1a1a;
+  color: white;
 }
 
 .slider-container {
@@ -130,6 +133,25 @@ h1 {
   scroll-behavior: smooth;
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.movie-grid.genre-movie-grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 0;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.movie-grid.genre-movie-grid::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.movie-grid.genre-movie-grid .movie-card {
+  flex: 0 0 auto;
+  width: 200px;
 }
 
 .movie-card {
@@ -203,21 +225,17 @@ h1 {
   transition: opacity 0.3s ease;
 }
 
-h3 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.2rem;
+h1 {
   margin: 0;
-  color: white;
+  color: #e50914;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
   text-align: left;
 }
 
-.movie-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 5px;
-  font-size: 0.9rem;
-  color: #999;
+.movie-container {
+  padding-top: 80px;
+  position: relative;
 }
 
 .movie-section {
@@ -312,8 +330,13 @@ nav ul li a:hover {
 }
 
 .genre-dropdown {
-  position: relative;
-  margin: 0 20px;
+  position: relative; /* Allow categories dropdown to be inside */
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: 101; /* Keep the categories dropdown above the main menu */
 }
 
 .genre-select {
