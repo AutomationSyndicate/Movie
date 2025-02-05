@@ -130,15 +130,12 @@ function App() {
     setSearchTimeout(timeout);
   };
 
-<<<<<<< HEAD
   const displayedMovies = searchQuery ? searchResults : movies;
   const toggleMenu = () => setShowMenu(!showMenu);
   const toggleCategories = () => setShowCategories(!showCategories);
 
   const categories = ["Action", "Comedy", "Drama", "Horror", "Sci-Fi"];
 
-=======
->>>>>>> 2fb39fb94f1fdb898b4f8fb5bd7ca6bd4310431a
   return (
     <Router>
       <div className="App">
