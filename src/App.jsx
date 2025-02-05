@@ -135,12 +135,14 @@ function App() {
       <div className="App">
         <header className="app-header">
           <div className="header-content">
-            <img
-              src={logo}
-              alt="App Logo"
-              className="logo"
-              style={{ height: "100px", width: "auto" }}
-            />
+            <Link to="/">
+              <img
+                src={logo}
+                alt="App Logo"
+                className="logo"
+                style={{ height: "100px", width: "auto" }}
+              />
+            </Link>
 
             <div className="search-container">
               <input
