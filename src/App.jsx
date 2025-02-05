@@ -128,8 +128,6 @@ function App() {
     setSearchTimeout(timeout);
   };
 
-  const displayedMovies = searchQuery ? searchResults : movies;
-
   return (
     <Router>
       <div className="App">
@@ -213,143 +211,205 @@ function App() {
         </div>
 
         <div className="movie-container">
-          <div className="movie-section">
-            <h2>Popular Movies</h2>
-            <div className="slider-container">
-              <button
-                className="slider-button left"
-                onClick={() => {
-                  const container = document.querySelector(".movie-grid");
-                  container.scrollLeft -= container.offsetWidth;
-                }}
-              >
-                ‹
-              </button>
-              <div className="movie-grid">
-                {movies.map((movie) => (
-                  <div
-                    key={movie.id}
-                    className="movie-card"
-                    onClick={() => handleMovieClick(movie)}
-                  >
-                    <img
-                      src={`${IMAGE_URL}${movie.poster_path}`}
-                      alt={movie.title}
-                      className="movie-poster"
-                    />
-                    <div className="movie-info">
-                      <h3>{movie.title}</h3>
-                      <div className="movie-details">
-                        <span>{new Date(movie.release_date).getFullYear()}</span>
-                        <span>⭐ {movie.vote_average.toFixed(1)}</span>
+          {/* Search Results Section */}
+          {searchQuery && searchResults.length > 0 && (
+            <div className="movie-section">
+              <h2>Search Results</h2>
+              <div className="slider-container">
+                <button
+                  className="slider-button left"
+                  onClick={() => {
+                    const container = document.querySelector(".search-results-grid");
+                    container.scrollLeft -= container.offsetWidth;
+                  }}
+                >
+                  ‹
+                </button>
+                <div className="movie-grid search-results-grid">
+                  {searchResults.map((movie) => (
+                    <div
+                      key={movie.id}
+                      className="movie-card"
+                      onClick={() => handleMovieClick(movie)}
+                    >
+                      <img
+                        src={movie.poster_path ? `${IMAGE_URL}${movie.poster_path}` : 'placeholder-image-url'}
+                        alt={movie.title}
+                        className="movie-poster"
+                      />
+                      <div className="movie-info">
+                        <h3>{movie.title}</h3>
+                        <div className="movie-details">
+                          <span>{movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}</span>
+                          <span>⭐ {movie.vote_average.toFixed(1)}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <button
+                  className="slider-button right"
+                  onClick={() => {
+                    const container = document.querySelector(".search-results-grid");
+                    container.scrollLeft += container.offsetWidth;
+                  }}
+                >
+                  ›
+                </button>
               </div>
-              <button
-                className="slider-button right"
-                onClick={() => {
-                  const container = document.querySelector(".movie-grid");
-                  container.scrollLeft += container.offsetWidth;
-                }}
-              >
-                ›
-              </button>
             </div>
-          </div>
+          )}
 
-          <div className="movie-section">
-            <h2>Trending Movies</h2>
-            <div className="slider-container">
-              <button
-                className="slider-button left"
-                onClick={() => {
-                  const container = document.querySelector(".trending-movie-grid");
-                  container.scrollLeft -= container.offsetWidth;
-                }}
-              >
-                ‹
-              </button>
-              <div className="movie-grid trending-movie-grid">
-                {trendingMovies.map((movie) => (
-                  <div
-                    key={movie.id}
-                    className="movie-card"
-                    onClick={() => handleMovieClick(movie)}
-                  >
-                    <img
-                      src={`${IMAGE_URL}${movie.poster_path}`}
-                      alt={movie.title}
-                      className="movie-poster"
-                    />
-                    <div className="movie-info">
-                      <h3>{movie.title}</h3>
-                      <div className="movie-details">
-                        <span>{new Date(movie.release_date).getFullYear()}</span>
-                        <span>⭐ {movie.vote_average.toFixed(1)}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <button
-                className="slider-button right"
-                onClick={() => {
-                  const container = document.querySelector(".trending-movie-grid");
-                  container.scrollLeft += container.offsetWidth;
-                }}
-              >
-                ›
-              </button>
+          {/* Show "No results found" message when search yields no results */}
+          {searchQuery && searchResults.length === 0 && (
+            <div className="no-results">
+              <h2>No results found for "{searchQuery}"</h2>
             </div>
-          </div>
+          )}
 
-          <div className="movie-section">
-            <h2>Upcoming Movies</h2>
-            <div className="slider-container">
-              <button
-                className="slider-button left"
-                onClick={() => {
-                  const container = document.querySelector(".upcoming-movie-grid");
-                  container.scrollLeft -= container.offsetWidth;
-                }}
-              >
-                ‹
-              </button>
-              <div className="movie-grid upcoming-movie-grid">
-                {upcomingMovies.map((movie) => (
-                  <div
-                    key={movie.id}
-                    className="movie-card"
-                    onClick={() => handleMovieClick(movie)}
+          {/* Only show other sections when not searching */}
+          {!searchQuery && (
+            <>
+              {/* Popular Movies Section */}
+              <div className="movie-section">
+                <h2>Popular Movies</h2>
+                <div className="slider-container">
+                  <button
+                    className="slider-button left"
+                    onClick={() => {
+                      const container = document.querySelector(".movie-grid");
+                      container.scrollLeft -= container.offsetWidth;
+                    }}
                   >
-                    <img
-                      src={`${IMAGE_URL}${movie.poster_path}`}
-                      alt={movie.title}
-                      className="movie-poster"
-                    />
-                    <div className="movie-info">
-                      <h3>{movie.title}</h3>
-                      <div className="movie-details">
-                        <span>{new Date(movie.release_date).getFullYear()}</span>
-                        <span>⭐ {movie.vote_average.toFixed(1)}</span>
+                    ‹
+                  </button>
+                  <div className="movie-grid">
+                    {movies.map((movie) => (
+                      <div
+                        key={movie.id}
+                        className="movie-card"
+                        onClick={() => handleMovieClick(movie)}
+                      >
+                        <img
+                          src={`${IMAGE_URL}${movie.poster_path}`}
+                          alt={movie.title}
+                          className="movie-poster"
+                        />
+                        <div className="movie-info">
+                          <h3>{movie.title}</h3>
+                          <div className="movie-details">
+                            <span>{new Date(movie.release_date).getFullYear()}</span>
+                            <span>⭐ {movie.vote_average.toFixed(1)}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                  <button
+                    className="slider-button right"
+                    onClick={() => {
+                      const container = document.querySelector(".movie-grid");
+                      container.scrollLeft += container.offsetWidth;
+                    }}
+                  >
+                    ›
+                  </button>
+                </div>
               </div>
-              <button
-                className="slider-button right"
-                onClick={() => {
-                  const container = document.querySelector(".upcoming-movie-grid");
-                  container.scrollLeft += container.offsetWidth;
-                }}
-              >
-                ›
-              </button>
-            </div>
-          </div>
+
+              <div className="movie-section">
+                <h2>Trending Movies</h2>
+                <div className="slider-container">
+                  <button
+                    className="slider-button left"
+                    onClick={() => {
+                      const container = document.querySelector(".trending-movie-grid");
+                      container.scrollLeft -= container.offsetWidth;
+                    }}
+                  >
+                    ‹
+                  </button>
+                  <div className="movie-grid trending-movie-grid">
+                    {trendingMovies.map((movie) => (
+                      <div
+                        key={movie.id}
+                        className="movie-card"
+                        onClick={() => handleMovieClick(movie)}
+                      >
+                        <img
+                          src={`${IMAGE_URL}${movie.poster_path}`}
+                          alt={movie.title}
+                          className="movie-poster"
+                        />
+                        <div className="movie-info">
+                          <h3>{movie.title}</h3>
+                          <div className="movie-details">
+                            <span>{new Date(movie.release_date).getFullYear()}</span>
+                            <span>⭐ {movie.vote_average.toFixed(1)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="slider-button right"
+                    onClick={() => {
+                      const container = document.querySelector(".trending-movie-grid");
+                      container.scrollLeft += container.offsetWidth;
+                    }}
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
+
+              <div className="movie-section">
+                <h2>Upcoming Movies</h2>
+                <div className="slider-container">
+                  <button
+                    className="slider-button left"
+                    onClick={() => {
+                      const container = document.querySelector(".upcoming-movie-grid");
+                      container.scrollLeft -= container.offsetWidth;
+                    }}
+                  >
+                    ‹
+                  </button>
+                  <div className="movie-grid upcoming-movie-grid">
+                    {upcomingMovies.map((movie) => (
+                      <div
+                        key={movie.id}
+                        className="movie-card"
+                        onClick={() => handleMovieClick(movie)}
+                      >
+                        <img
+                          src={`${IMAGE_URL}${movie.poster_path}`}
+                          alt={movie.title}
+                          className="movie-poster"
+                        />
+                        <div className="movie-info">
+                          <h3>{movie.title}</h3>
+                          <div className="movie-details">
+                            <span>{new Date(movie.release_date).getFullYear()}</span>
+                            <span>⭐ {movie.vote_average.toFixed(1)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="slider-button right"
+                    onClick={() => {
+                      const container = document.querySelector(".upcoming-movie-grid");
+                      container.scrollLeft += container.offsetWidth;
+                    }}
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {selectedMovie && (
