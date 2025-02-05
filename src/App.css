@@ -304,7 +304,7 @@ nav ul li a:hover {
 }
 
 .logo {
-  height: 40px;  /* Adjust the height as needed */
+  height: 40px;
   object-fit: contain;
 }
 
@@ -315,15 +315,14 @@ nav ul li a:hover {
   width: 200px;
   height: 300px;
   transform-style: preserve-3d;
-  animation: rotate 30s linear infinite;
+  animation: rotate 45s linear infinite;
 }
 
 .rotate-slider-container {
   width: 100%;
   display: flex;
-  justify-content: center;
-  margin-right: 500px;
-  padding-top: 350px;
+  padding-left: 45vw;
+  padding-top: 250px;
   padding-bottom: 160px;
 }
 
@@ -344,7 +343,7 @@ nav ul li a:hover {
   height: 100%;
   transform-origin: center;
   transform-style: preserve-3d;
-  transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); /* Adjust Z value for spacing */
+  transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); 
 }
 
 .rotate-slider span img {
