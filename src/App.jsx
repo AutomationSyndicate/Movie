@@ -209,20 +209,18 @@ function App() {
                 }}
                 className="search-input"
               />
-  
-              <div className="genre-dropdown">
-                <select 
-                  className="genre-select"
-                  value={selectedGenre}
-                  onChange={handleGenreChange}
-                >
-                  {predefinedGenres.map((genre) => (
-                    <option key={genre.id} value={genre.id}>
-                      {genre.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <select 
+                className="genre-select"
+                value={selectedGenre}
+                onChange={handleGenreChange}
+              >
+                <option value="">Genres</option>
+                {predefinedGenres.map((genre) => (
+                  <option key={genre.id} value={genre.id}>
+                    {genre.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </header>

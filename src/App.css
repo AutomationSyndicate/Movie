@@ -46,6 +46,9 @@ html, body {
   position: relative;
   margin-left: 20px;
   transition: transform 0.3s ease;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .search-container:hover {
@@ -308,56 +311,57 @@ nav ul li a:hover {
   object-fit: contain;
 }
 
-
-/*3D Movie Poster Styling*/
-.rotate-slider {
+.genre-dropdown {
   position: relative;
-  width: 200px;
-  height: 300px;
-  transform-style: preserve-3d;
-  animation: rotate 45s linear infinite;
+  margin: 0 20px;
 }
 
-.rotate-slider-container {
-  width: 100%;
-  display: flex;
-  padding-left: 45vw;
-  padding-top: 250px;
-  padding-bottom: 160px;
+.genre-select {
+  appearance: none;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 12px 35px 12px 15px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 140px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+              0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-@keyframes rotate {
-  0% {
-    transform: perspective(1000px) rotateY(0deg);
-  }
-  100% {
-    transform: perspective(1000px) rotateY(360deg);
-  }
+.genre-select:hover, .genre-select:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(229, 9, 20, 0.7);
+  outline: none;
+  box-shadow: 0 8px 12px rgba(229, 9, 20, 0.15),
+              0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-.rotate-slider span {
+.genre-select option {
+  background: #141414;
+  color: white;
+  padding: 12px;
+  font-size: 15px;
+}
+
+/* Custom dropdown arrow */
+.search-container .genre-select {
+  position: relative;
+}
+
+.search-container .genre-select::after {
+  content: '▼';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transform-origin: center;
-  transform-style: preserve-3d;
-  transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); 
-}
-
-.rotate-slider span img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  transition: transform 2s;
-}
-
-.rotate-slider span:hover img {
-  transform: translateY(-50px) scale(1.2);
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  font-size: 12px;
 }
 
 /*menu*/
@@ -410,4 +414,55 @@ nav ul li a:hover {
 .categories-dropdown-item:hover,
 .dropdown-item:hover {
   background-color: hsl(171, 8%, 83%);
+}
+
+/*3D Movie Poster Styling*/
+.rotate-slider {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  transform-style: preserve-3d;
+  animation: rotate 45s linear infinite;
+}
+
+.rotate-slider-container {
+  width: 100%;
+  display: flex;
+  padding-left: 45vw;
+  padding-top: 250px;
+  padding-bottom: 160px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: perspective(1000px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(1000px) rotateY(360deg);
+  }
+}
+
+.rotate-slider span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px); 
+}
+
+.rotate-slider span img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  transition: transform 2s;
+}
+
+.rotate-slider span:hover img {
+  transform: translateY(-50px) scale(1.2);
 }
