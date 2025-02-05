@@ -23,9 +23,11 @@ const Modal = ({ movie, onClose, onShowTrailer }) => {
             <p><strong>Release Date:</strong> {movie.release_date}</p>
             <p><strong>Rating:</strong> ⭐ {movie.vote_average.toFixed(1)}</p>
             <p>{movie.overview}</p>
-            <button className="trailer-button" onClick={onShowTrailer}>
-              Show Trailer
-            </button>
+            {movie.trailerUrl && (
+              <button className="trailer-button" onClick={() => onShowTrailer(movie.id)}>
+                Watch Trailer
+              </button>
+            )}
           </div>
         </div>
       </div>

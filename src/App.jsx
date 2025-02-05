@@ -5,8 +5,9 @@ import "./App.css";
 import CategoryPage from "./CategoryPage";
 import logo from "./assets/logo.png";
 import Modal from "./Modal";
+import TrailerModal from "./TrailerModal";
 
-const API_KEY = "19517c2997a6f18d7a87adee2d219374"; // Replace with your TMDB API key
+const TMDB_API_KEY = "19517c2997a6f18d7a87adee2d219374"; // Replace with your TMDB API key
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -20,39 +21,25 @@ function App() {
   const [genres, setGenres] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [posters, setPosters] = useState([]);
+  const [showTrailerModal, setShowTrailerModal] = useState(false);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/movie/popular?api_key=${API_KEY}`
+          `${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}`
         );
         setMovies(response.data.results);
 
-        const movieId = response.data.results[0].id;
-        const trailerResponse = await axios.get(
-          `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`
-        );
-
         const movieGenre = await axios.get(
-          `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=en-US`
+          `${BASE_URL}/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`
         );
         setGenres(movieGenre.data.genres);
 
         const moviePoster = await axios.get(
-          `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
+          `${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`
         );
-        setPosters(moviePoster.data.results.slice(0, 8))
-
-        const trailer = trailerResponse.data.results.find(
-          (video) => video.type === "Trailer"
-        );
-
-        if (trailer) {
-          setTrailerUrl(
-            `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`
-          );
-        }
+        setPosters(moviePoster.data.results.slice(0, 8));
       } catch (error) {
         console.error("Error fetching movies or trailer:", error);
       } finally {
@@ -63,28 +50,48 @@ function App() {
     fetchMovies();
   }, []);
 
-  // ✅ Fixed Fetch Movie Details
   const fetchMovieDetails = async (movieId) => {
     try {
-      console.log("Fetching movie details for ID:", movieId);
-      const response = await axios.get(
-        `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`
+      const movieResponse = await axios.get(
+        `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}`
       );
-      console.log("Movie details response:", response.data);
-      setSelectedMovie(response.data);
+      const trailerResponse = await axios.get(
+        `${BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}`
+      );
+
+      const trailer = trailerResponse.data.results.find(
+        (video) => video.type === "Trailer"
+      );
+
+      const movieDetails = {
+        ...movieResponse.data,
+        trailerUrl: trailer ? `https://www.youtube.com/embed/${trailer.key}` : null,
+      };
+
+      setSelectedMovie(movieDetails);
     } catch (error) {
       console.error("Error fetching movie details:", error);
     }
   };
 
-  // ✅ Handle Movie Click
   const handleMovieClick = (movie) => {
     fetchMovieDetails(movie.id);
   };
 
-  // ✅ Close Modal
+  const handleShowTrailer = () => {
+    if (selectedMovie && selectedMovie.trailerUrl) {
+      setTrailerUrl(`${selectedMovie.trailerUrl}?autoplay=1&mute=1`);
+      setShowTrailerModal(true);
+    }
+  };
+
   const handleCloseModal = () => {
     setSelectedMovie(null);
+  };
+
+  const handleCloseTrailerModal = () => {
+    setShowTrailerModal(false);
+    setTrailerUrl("");
   };
 
   const handleSearch = async (query) => {
@@ -95,7 +102,7 @@ function App() {
 
     try {
       const response = await axios.get(
-        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(
+        `${BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(
           query
         )}`
       );
@@ -170,7 +177,6 @@ function App() {
           </div>
         </header>
 
-
        {/* 3D Movie Poster Section*/}
        <div className="rotate-slider-container">
           <div className="rotate-slider">
@@ -185,7 +191,6 @@ function App() {
           </div>
         </div>
 
-        
         <div>
           <h1>Movie Categories</h1>
           <nav>
@@ -224,7 +229,7 @@ function App() {
                   <div
                     key={movie.id}
                     className="movie-card"
-                    onClick={() => handleMovieClick(movie)} // ✅ Fix: Click event added
+                    onClick={() => handleMovieClick(movie)}
                   >
                     <img
                       src={`${IMAGE_URL}${movie.poster_path}`}
@@ -254,8 +259,13 @@ function App() {
           </div>
         </div>
 
-        {/* ✅ Render Modal when movie is selected */}
-        {selectedMovie && <Modal movie={selectedMovie} onClose={handleCloseModal} />}
+        {selectedMovie && (
+          <Modal movie={selectedMovie} onClose={handleCloseModal} onShowTrailer={handleShowTrailer} />
+        )}
+
+        {showTrailerModal && (
+          <TrailerModal trailerUrl={trailerUrl} onClose={handleCloseTrailerModal} />
+        )}
       </div>
     </Router>
   );
