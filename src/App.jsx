@@ -22,7 +22,6 @@ function App() {
   const [posters, setPosters] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showTrailerModal, setShowTrailerModal] = useState(false);
-
   const [showRotateSlider, setShowRotateSlider] = useState(true);
   const [selectedGenre, setSelectedGenre] = useState('');
 
@@ -48,24 +47,19 @@ function App() {
     { id: 10752, name: 'War' }
   ];
 
-
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-
         const [popularResponse, trendingResponse, upcomingResponse, moviePoster] = await Promise.all([
           axios.get(`${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}`),
           axios.get(`${BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}`),
           axios.get(`${BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}`),
-
           axios.get(`${BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`)
         ]);
 
         setMovies(popularResponse.data.results);
         setTrendingMovies(trendingResponse.data.results);
         setUpcomingMovies(upcomingResponse.data.results);
-
-
         setPosters(moviePoster.data.results.slice(0, 8));
       } catch (error) {
         console.error("Error fetching movies or trailer:", error);
@@ -154,7 +148,6 @@ function App() {
     setSearchTimeout(timeout);
   };
 
-
   const handleLogoClick = (e) => {
     e.preventDefault();
     setSearchQuery('');
@@ -188,14 +181,12 @@ function App() {
     }
   };
 
-
   return (
     <Router>
       <div className="App">
         <header className="app-header">
           <div className="header-content">
             <Link to="/" onClick={handleLogoClick}>
-
               <img
                 src={logo}
                 alt="App Logo"
@@ -233,40 +224,10 @@ function App() {
                 </select>
               </div>
             </div>
-            {/* Menu Dropdown */}
-            <div className="menu-container">
-              <button onClick={toggleMenu} className="menu-button">
-                Menu
-              </button>
-              {showMenu && (
-                <div className="dropdown">
-                  <Link to="/" className="dropdown-item">
-                    Home
-                  </Link>
-                  <div className="dropdown-item" onClick={toggleCategories}>
-                    Categories
-                    {showCategories && (
-                      <div className="categories-dropdown">
-                        {categories.map((category, index) => (
-                          <Link
-                            key={index}
-                            to={`/categories/${category}`}
-                            className="categories-dropdown-item"
-                          >
-                            {category}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         </header>
 
         {/* 3D Movie Poster Section*/}
-
         {showRotateSlider && (
           <div className="rotate-slider-container">
             <div className="rotate-slider">
@@ -279,7 +240,6 @@ function App() {
                 </span>
               ))}
             </div>
-
           </div>
         )}
 
@@ -340,7 +300,6 @@ function App() {
             </div>
           )}
 
-
           {/* Only show other sections when not searching */}
           {!searchQuery && (
             <>
@@ -390,7 +349,6 @@ function App() {
                   </button>
                 </div>
               </div>
-
 
               <div className="movie-section">
                 <h2>Trending Movies</h2>
