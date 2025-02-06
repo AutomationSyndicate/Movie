@@ -49,8 +49,9 @@ html {
 .search-container {
   position: relative;
   width: 100%;
-  max-width: 600px;
-  margin: 0 20px;
+ 
+  margin-right: 6rem;
+  width: 450px;
 }
 
 .search-input-container {
