@@ -80,4 +80,4 @@ Contributions are welcome! Please follow these steps to contribute:
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ##Deployment Link
-https://timely-biscotti-ed64bd.netlify.app/
+(https://autosynstudios.netlify.app/)
